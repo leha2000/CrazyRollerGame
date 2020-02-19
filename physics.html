@@ -25,6 +25,19 @@ const Physics = {
 			ground: [
 				{x: 310, y: 200, w: 600, h: 20, shape: 'rect'},
 				{x: 650, y: 280, vertices: [{x: 650, y: 280}, {x: 330, y: 330}, {x: 650, y: 330}]},
+				{x: 300, y: 350, vertices: [{x: 350, y: 350}, {x: 0, y: 300}, {x: 0, y: 350}]},
+				{x: 55, y: 500, vertices: [{x: 55, y: 500}, {x: 55, y: 550}, {x: 200, y: 550}]},
+				{x: 160, y: 450, w: 20, h: 100, shape: 'rect', background: '#FF0000'},
+			],
+			start: {x: 50, y: 170},
+			win: {x: 125, y: 480, w: 10, h: 10},
+			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
+					"to platform and reach the red object without falling below."
+		},
+		{
+			ground: [
+				{x: 310, y: 200, w: 600, h: 20, shape: 'rect'},
+				{x: 650, y: 280, vertices: [{x: 650, y: 280}, {x: 330, y: 330}, {x: 650, y: 330}]},
 				{x: 350, y: 350, vertices: [{x: 350, y: 350}, {x: 0, y: 300}, {x: 0, y: 350}]},
 				{x: 120, y: 340, w: 140, h: 20, shape: 'rect'},
 				{x: 55, y: 500, vertices: [{x: 55, y: 500}, {x: 55, y: 550}, {x: 200, y: 550}]},
@@ -33,7 +46,7 @@ const Physics = {
 			start: {x: 50, y: 170},
 			win: {x: 125, y: 480, w: 10, h: 10},
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
-					"to platform and reach the red object without falling below."
+					"to platform and reach the red object without falling below.<br>More platforms!"
 		}
 	],
 
@@ -86,14 +99,18 @@ const Physics = {
 			options: {wireframes: false}
 		});
 
+		Render.run(this.render);
+		Engine.run(this.engine);
+
+		this.buildLevel();
+	},
+
+	buildLevel: function () {
 		let level = this.LEVELS[this.level];
 		this.addLevel(level.ground);
 		document.getElementById('instructions').innerHTML = level.instructions;
-
-		Render.run(this.render);
-		Engine.run(this.engine);
+		document.getElementById('level').innerText = 'level ' + (this.level + 1);
 	},
-
 
 	checkPosition: function(position) {
 		const x = position.x;
@@ -124,7 +141,13 @@ const Physics = {
 
 	endGame: function (win) {
 		this.setStatus(win ? "Win!" : "Game over!");
-		setTimeout("Physics.rerun()", 3000);
+		if (win) {
+			this.level += 1;
+			if (this.level >= this.LEVELS.length) {
+				return;
+			}
+		}
+		setTimeout("Physics.rerun(" + win + ")", 3000);
 	},
 
 	setStatus: function (text) {
@@ -145,8 +168,11 @@ const Physics = {
 		this.checkState();
 	},
 
-	rerun: function () {
-		Matter.World.clear(this.engine.world, true);
+	rerun: function (changeLevel) {
+		Matter.World.clear(this.engine.world, !changeLevel);
+		if (changeLevel) {
+			this.buildLevel();
+		}
 		this.run();
 	}
 };
