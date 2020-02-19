@@ -56,6 +56,9 @@ const Physics = {
 			color = g.background;
 		}
 		let props = {isStatic: true, render: {fillStyle: color}};
+		if ('backgroundImage' in g) {
+			props.render.sprite = {texture: g['backgroundImage']};
+		}
 
 		if (g.shape == 'rect') {
 			return Bodies.rectangle(g.x, g.y, g.w, g.h, props);
