@@ -1,0 +1,159 @@
+<html lang="en">
+
+<head>
+
+<title>Crazy roller</title>
+
+<script src="poly-decomp.js" type="text/javascript"></script>
+<script src="matter.js"></script>
+
+<script>
+const Engine = Matter.Engine,
+	Render = Matter.Render,
+    World = Matter.World,
+    Body = Matter.Body,
+    Bodies = Matter.Bodies;
+
+
+const Physics = {
+
+	speed: 0,
+
+	LEVEL_1: [
+		{x: 310, y: 200, w: 600, h: 20, shape: 'rect'},
+		{x: 650, y: 280, vertices: [{x: 650, y: 280}, {x: 330, y: 330}, {x: 650, y: 330}]},
+		{x: 350, y: 350, vertices: [{x: 350, y: 350}, {x: 0, y: 300}, {x: 0, y: 350}]},
+		{x: 120, y: 340, w: 140, h: 20, shape: 'rect'},
+		{x: 55, y: 500, vertices: [{x: 55, y: 500}, {x: 55, y: 550}, {x: 200, y: 550}]},
+		{x: 160, y: 450, w: 20, h: 100, shape: 'rect', background: '#FF0000'},
+	],
+
+	createGround: function(g) {
+		let color = '#cccccc';
+		if ('background' in g) {
+			color = g['background'];
+		}
+		let props = {isStatic: true, render: {fillStyle: color}};
+
+		if (g.shape == 'rect') {
+			return Bodies.rectangle(g.x, g.y, g.w, g.h, props);
+		}
+		return Bodies.fromVertices(g['x'], g['y'], g['vertices'], props);
+	},
+
+	addLevel: function (grounds) {
+		let result = [];
+		for (let i = 0; i < grounds.length; i++) {
+			const g = grounds[i];
+			let elem = this.createGround(g);
+			elem.friction = 'friction' in g ? g.friction : 0.1;
+			elem.frictionStatic = 0;
+			result.push(elem);
+		}
+		World.add(this.engine.world, result);
+	},
+
+	checkKeys: function (evt) {
+		switch (evt.keyCode) {
+			case 37:
+				Physics.changeSpeed(-1);
+				break;
+			case 39:
+				Physics.changeSpeed(1);
+				break;
+		}
+	},
+
+	changeSpeed: function(inc) {
+		const speed = this.circle.angularVelocity + inc * 0.01;
+		Body.setAngularVelocity(this.circle, speed);
+	},
+
+	init: function () {
+		this.engine = Engine.create();
+		this.render = Render.create({
+		    element: document.getElementById('sim'),
+		    engine: this.engine,
+			options: {wireframes: false}
+		});
+
+		this.addLevel(this.LEVEL_1);
+
+		Render.run(this.render);
+		Engine.run(this.engine);
+	},
+
+
+	checkPosition: function(position) {
+		const x = position.x;
+		const y = position.y;
+		if (y > 500) {
+			return -1;
+		}
+		if (x > 125 && x < 135 && y > 480 && y < 490) {
+			return 1;
+		}
+		return 0;
+	},
+
+	checkState: function () {
+		const income = this.checkPosition(this.circle.position);
+		if (income != 0) {
+			if (income == 1) {
+				this.setStatus("Win!");
+			} else {
+				this.setStatus("Game Over!");
+			}
+			return;
+		}
+
+		const speed = this.circle.angularVelocity;
+		const speedText = speed < 0 ? "< " + Math.round(-speed*100) : Math.round(speed*100) + " >";
+		this.setStatus(speedText);
+	
+		this.checkFunc = setTimeout("Physics.checkState()", 100);
+	},
+
+	setStatus: function (text) {
+		document.getElementById('speed').innerText = text;
+	},
+
+	run: function () {
+		const circle = Bodies.circle(50, 170, 20);
+		circle.friction = 0.1;
+		circle.frictionAir = 0;
+		circle.frictionStatic = 0;
+
+		Matter.World.add(this.engine.world, [circle]);
+		this.circle = circle;
+
+		window.addEventListener('keydown', this.checkKeys);
+		this.checkState();
+	},
+
+	rerun: function () {
+		Matter.World.clear(this.engine.world, true);
+	},
+
+	reset: function () {
+		Matter.Render.stop(this.engine);
+		Matter.Runner.stop(this.runner);
+	}
+};
+
+</script>
+
+</head>
+
+<body onload="Physics.init(); Physics.run()">
+	<div style="float: left; width: 820px">
+		<div id="sim"></div>
+		<div id="speed" style="padding-left: 2em; font-size: xx-large">0</div>
+	</div>
+	<div style="float: left; width: 400px;">
+		<h2>Crazy roller</h2>
+		<p>Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform to platform
+		and reach the red object without falling below.</p>
+	</div>
+</body>
+</html>
