@@ -31,7 +31,9 @@ const Physics = {
 				{x: 160, y: 450, w: 20, h: 100, shape: 'rect', background: '#FF0000'},
 			],
 			start: {x: 50, y: 170},
-			win: {x: 125, y: 480, w: 10, h: 10}
+			win: {x: 125, y: 480, w: 10, h: 10},
+			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
+					"to platform and reach the red object without falling below."
 		}
 	],
 
@@ -84,7 +86,9 @@ const Physics = {
 			options: {wireframes: false}
 		});
 
-		this.addLevel(this.LEVELS[this.level].ground);
+		let level = this.LEVELS[this.level];
+		this.addLevel(level.ground);
+		document.getElementById('instructions').innerHTML = level.instructions;
 
 		Render.run(this.render);
 		Engine.run(this.engine);
@@ -161,8 +165,8 @@ const Physics = {
 	</div>
 	<div style="float: left; width: 400px; padding-left: 20px">
 		<h2>Crazy roller</h2>
-		<p>Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform to platform
-		and reach the red object without falling below.</p>
+		<p id="instructions">
+		</p>
 	</div>
 </body>
 </html>
