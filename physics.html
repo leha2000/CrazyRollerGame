@@ -111,8 +111,8 @@ const Physics = {
 			return;
 		}
 
-		const speed = this.circle.angularVelocity;
-		const speedText = speed < 0 ? "< " + Math.round(-speed*100) : Math.round(speed*100) + " >";
+		const speed = Math.round(this.circle.angularVelocity * 100);
+		const speedText = speed < 0 ? "< " + (-speed) : speed + (speed > 0 ? " >" : "");
 		this.setStatus(speedText);
 	
 		this.checkFunc = setTimeout("Physics.checkState()", 100);
