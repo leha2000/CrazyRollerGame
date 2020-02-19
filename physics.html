@@ -102,7 +102,7 @@ const Physics = {
 			if (income == 1) {
 				this.setStatus("Win!");
 			} else {
-				this.setStatus("Game Over!");
+				this.rerun();
 			}
 			return;
 		}
@@ -133,11 +133,7 @@ const Physics = {
 
 	rerun: function () {
 		Matter.World.clear(this.engine.world, true);
-	},
-
-	reset: function () {
-		Matter.Render.stop(this.engine);
-		Matter.Runner.stop(this.runner);
+		this.run();
 	}
 };
 
