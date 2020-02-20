@@ -14,9 +14,9 @@ const Physics = {
 	LEVELS: [
 		{
 			ground: [
-				{x: 200, y: 500, w: 500, h: 20, shape: 'rect'},
-				{x: 400, y: 475, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
-				{x: 720, y: 500, w: 420, h: 20, shape: 'rect'},
+				{x: 200, y: 500, w: 400, h: 20, shape: 'rect'},
+				{x: 360, y: 475, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
+				{x: 670, y: 500, w: 420, h: 20, shape: 'rect'},
 			],
 			staticObjects: [
 			],
@@ -252,8 +252,6 @@ const Physics = {
 
 		const IsInputPaused = this.checkTresholdPole(this.circle.position);
 		this.IsInputPaused = IsInputPaused;
-		console.log(IsInputPaused);
-
 
 		const speed = Math.round(this.circle.angularVelocity * 100);
 		const speedText = speed < 0 ? "< " + (-speed) : speed + (speed > 0 ? " >" : "");
