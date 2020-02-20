@@ -26,42 +26,47 @@ const Physics = {
 			win: {x: 125, y: 480, w: 10, h: 10},
 			winningAroundWinningPole:false,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
-					"to platform and reach the red object without falling below."
+					"to platform to reach out the pole with a flag to win the challenge."
 		},
 		{
 			ground: [
-				{x: 200, y: 500, w: 670, h: 20, shape: 'rect'},
-				{x: 500, y: 475, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
-				{x: 810, y: 500, w: 420, h: 20, shape: 'rect'},
+				{x: 175, y: 500, w: 450, h: 20, shape: 'rect'},
+				{x: 300, y: 500, w: 150, h: 20, shape: 'rect', background: 'red', friction: 0},
+				{x: 500, y: 500, w: 200, h: 20, shape: 'rect'},
+				{x: 565, y: 482, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
+				{x: 870, y: 500, w: 420, h: 20, shape: 'rect'},
 			],
 			staticObjects: [
 			],
+			grassAreas: [{left: 225, right: 375}],
 			thresholdPole:{x: 1000, y: 470, w: 20, h:50, shape:'rect', background:'#ff00ee'},
 			winningPole:{x:700, y:500, w:30, h: 150, shape:'rect', background:'#cc3133'},
-			start: {x: 50, y: 170},
+			start: {x: 25, y: 170},
 			win: {x: 125, y: 480, w: 10, h: 10},
 			winningAroundWinningPole:false,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
-					"reach out the pole with a flag to win the challenge, remember the <strong>red</strong> surface is stickier than you think."
+					"to platform to reach out the pole with a flag to win the challenge.<br><br>" +
+					"NEW: <strong>red</strong> surface is stickier than you think."
 		},
 		{
 			ground: [
-				{x: 310, y: 200, w: 600, h: 20, shape: 'rect'},
+				{x: 210, y: 200, w: 400, h: 20, shape: 'rect'},
+				{x: 510, y: 200, w: 200, h: 20, shape: 'rect', background: '#0000FF', friction: 0},
 				{x: 650, y: 280, vertices: [{x: 650, y: 280}, {x: 330, y: 330}, {x: 650, y: 330}]},
 				{x: 350, y: 350, vertices: [{x: 350, y: 350}, {x: 0, y: 300}, {x: 0, y: 350}]},
-				{x: 120, y: 340, w: 140, h: 20, shape: 'rect'},
+				{x: 130, y: 340, w: 120, h: 20, shape: 'rect', friction: 0, background: 'blue'},
 				{x: 55, y: 500, vertices: [{x: 55, y: 500}, {x: 55, y: 550}, {x: 200, y: 550}]},
-				{x: 160, y: 450, w: 20, h: 100, shape: 'rect', background: '#FF0000'},
 			],
 			staticObjects: [
 			],
-			thresholdPole:{x:250, y: 400, w: 20, h:50, shape:'rect', background:'#ff00ee'},
-            winningPole:{x:120,y:450,w:20, h: 100, shape:'rect', background:'#cc3133'},
+			thresholdPole:{x:1000, y: 450, w: 20, h:50, shape:'rect', background:'#ff00ee'},
+            winningPole:{x:150,y:470,w:20, h: 100, shape:'rect', background:'#cc3133'},
 			start: {x: 50, y: 170},
 			win: {x: 125, y: 480, w: 10, h: 10},
 			winningAroundWinningPole:true,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
-					"reach out the pole with a flag to win the challenge, remember the surface is stickier than you think."
+					"to platform to reach out the pole with a flag to win the challenge.<br><br>" +
+                "NEW: <strong>blue</strong> surface is smooth."
 		}
 	],
 
@@ -128,16 +133,46 @@ const Physics = {
 
 	checkKeys: function (evt) {
 		if(!Physics.IsInputPaused) {
+			let inc = 0;
 			switch (evt.keyCode) {
 				case 37:
-					Physics.changeSpeed(-1);
+					inc = -1;
 					break;
 				case 39:
-					Physics.changeSpeed(1);
+					inc = 1;
 					break;
+				default:
+					return;
+			}
+
+			if (!Physics.isGrass()) {
+				Physics.changeSpeed(inc);
+				return;
+			}
+
+			if (inc * Physics.circle.angularVelocity > 0) { // inverse effect on acceleration
+				inc *= -1;
+			} else { // reduce braking
+				inc *= 0.5;
+			}
+			Physics.changeSpeed(inc);
+		}
+	},
+
+    // changes acceleration to braking or reduces braking
+	isGrass: function () {
+		const level = this.LEVELS[this.level];
+		const x = this.circle.position.x;
+
+		if ('grassAreas' in level) {
+			const grassAreas = level.grassAreas;
+			for (let i = 0; i < grassAreas.length; i++) {
+				if (grassAreas[i].left <= x && x <= grassAreas[i].right) {
+					return true;
+				}
 			}
 		}
-		
+		return false;
 	},
 
 	changeSpeed: function(inc) {
@@ -173,18 +208,18 @@ const Physics = {
 			return -1;
 		}
 
+		if (this.isGrass() && Math.abs(this.circle.angularVelocity) < 0.02) {
+		    return -1;
+        }
+
 		const winningPolePos = this.LEVELS[this.level].winningPole;
 		const winningAroundPole = this.LEVELS[this.level].winningAroundWinningPole;
 
 		if (!winningAroundPole) { // for tutorial level
 			return this.checkMoreThanWinningPole(position, winningPolePos);
 		} else {
-			if (circle.speed < 0.3 && Physics.IsInputPaused) {
-				if (this.checkAroundWinningPole(position, winningPolePos, Physics.winningArea))
-					return 1;
-				else
-					return -1;
-			}
+			if (this.checkAroundWinningPole(position, winningPolePos, Physics.winningArea))
+				return 1;
 		}
 
 		return 0;
@@ -211,11 +246,13 @@ const Physics = {
 			return 0;
 	},
 
-	checkTresholdPole:function(position){
+	checkThresholdPole:function(position){
 
 		const thresholdPos = this.LEVELS[this.level].thresholdPole;
 
-		if(position.x > thresholdPos.x)
+		const dx = position.x - thresholdPos.x;
+		const dy = position.y - thresholdPos.y;
+		if (Math.sqrt(dx * dx + dy * dy) < 10)
 			return 1;
 		else
 			return 0;
@@ -229,14 +266,14 @@ const Physics = {
 			return;
 		}
 
-		const IsInputPaused = this.checkTresholdPole(this.circle.position);
+		const IsInputPaused = this.checkThresholdPole(this.circle.position);
 		this.IsInputPaused = IsInputPaused;
 
 		const speed = Math.round(this.circle.angularVelocity * 100);
 		const speedText = speed < 0 ? "< " + (-speed) : speed + (speed > 0 ? " >" : "");
 		this.setStatus(speedText);
 	
-		this.checkFunc = setTimeout("Physics.checkState()", 100);
+		setTimeout("Physics.checkState()", 100);
 	},
 
 	endGame: function (win) {
