@@ -1,0 +1,18 @@
+<html>
+    <head>
+    <script language="JavaScript">
+        var bg_sound = new Audio("sound/SlowJamLoop.m4a");
+        bg_sound.loop = true;
+        bg_sound.volume = 0.3;
+        var screecher = new Audio("sound/CarScreech.m4a");
+        var leaving = new Audio("sound/CarLeave.m4a");
+    </script>
+    </head>
+    <body>
+        <button onClick="bg_sound.play()">Start Background Music</button>
+        <button onClick="bg_sound.pause()">Stop Background Music</button>
+        <hr/>
+        <button onClick="screecher.play()">Screech</button>
+        <button onClick="leaving.play()">Run</button>
+    </body>
+</html>
