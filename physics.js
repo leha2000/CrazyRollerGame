@@ -153,8 +153,7 @@ const Physics = {
 	  },
 
 	checkKeys: function (evt) {
-		if(Physics.IsInputPaused == false)
-		{
+		if(!Physics.IsInputPaused) {
 			switch (evt.keyCode) {
 				case 37:
 					Physics.changeSpeed(-1);
@@ -193,19 +192,6 @@ const Physics = {
 		document.getElementById('level').innerText = 'level ' + (this.level + 1);
 	},
 
-	checkPosition: function(position) {
-		const x = position.x;
-		const y = position.y;
-		if (y > 500) {
-			return -1;
-		}
-		const win = this.LEVELS[this.level].win;
-		if ((x > win.x && x < win.x + win.w) && (y > win.y && y < win.y + win.h)) {
-			return 1;
-		}
-		return 0;
-	},
-
 	checkWinningPosition:function(circle){
 
 		const winningPolePos = this.LEVELS[this.level].winningPole;
@@ -233,7 +219,7 @@ const Physics = {
 
 	},
 
-	checkAroundWinningPole:function(positionCircle, positionWinning,thresholdDistance){
+	checkAroundWinningPole:function(positionCircle, positionWinning, thresholdDistance){
 
 		const distX = positionCircle.x - positionWinning.x;
 		const distY = positionCircle.y - positionWinning.y;
