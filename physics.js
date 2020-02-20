@@ -5,6 +5,44 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies;
 
 
+const CarSounds = {
+
+    accelerationSound: new Audio("sound/drive.mp3"),
+    brakeSound: new Audio("sound/tyre.mp3"),
+
+    state: 0,
+
+    init: function () {
+        this.accelerationSound.loop = true;
+        this.accelerationSound.volume = 0.3;
+        this.brakeSound.loop = true;
+        this.brakeSound.volume = 0.3;
+    },
+
+    start: function (state) {
+        if (this.state != state) {
+            this.stop();
+            this.state = state;
+            this.sound(state).play();
+            if (this.stopHandler != null) {
+                clearTimeout(this.stopHandler);
+            }
+            this.stopHandler = setTimeout("CarSounds.stop()", 1000);
+        }
+    },
+
+    sound: function (state) {
+        return state == 1 ? this.accelerationSound : this.brakeSound;
+    },
+
+    stop: function () {
+        if (this.state != 0) {
+            this.sound(this.state).pause();
+            this.state = 0;
+        }
+    }
+};
+
 const Physics = {
 
 	speed: 0,
@@ -134,12 +172,15 @@ const Physics = {
 	checkKeys: function (evt) {
 		if(!Physics.IsInputPaused) {
 			let inc = 0;
+			const rotation = Physics.circle.angularVelocity >= 0 ? 1 : -1;
 			switch (evt.keyCode) {
 				case 37:
 					inc = -1;
+					CarSounds.start(-rotation);
 					break;
 				case 39:
 					inc = 1;
+					CarSounds.start(rotation);
 					break;
 				default:
 					return;
@@ -181,6 +222,8 @@ const Physics = {
 	},
 
 	init: function () {
+	    CarSounds.init();
+
 		this.engine = Engine.create();
 		this.render = Render.create({
 		    element: document.getElementById('sim'),
