@@ -14,9 +14,9 @@ const Physics = {
 	LEVELS: [
 		{
 			ground: [
-				{x: 163, y: 500, w: 340, h: 20, shape: 'rect'},
-				{x: 295, y: 475, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
-				{x: 590, y: 500, w: 420, h: 20, shape: 'rect'},
+				{x: 200, y: 500, w: 500, h: 20, shape: 'rect'},
+				{x: 400, y: 475, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
+				{x: 720, y: 500, w: 420, h: 20, shape: 'rect'},
 			],
 			staticObjects: [
 			],
@@ -49,10 +49,7 @@ const Physics = {
 			ground: [
 				{x: 0, y: 350, w: 300, h: 20, shape: 'rect', friction:0.1},
 				{x: 255, y: 460, vertices: [{x: 330, y:200}, {x: 330, y: 380}, {x: 650, y: 380}], friction:1},
-				{x: 500, y: 400, w: 600, h: 20, shape: 'rect', friction:0.1, background:'#ff2211'},
-				{x: 800, y: 400, w: 20, h: 200, shape: 'rect', friction:0.1, background:'#ffffff'},
-				
-				
+				{x: 430, y: 400, w: 460, h: 20, shape: 'rect', friction:0.1, background:'#ff2211'}
 			],
 			staticObjects: [
 
@@ -193,6 +190,9 @@ const Physics = {
 	// Check for end game: return 1 for win, -1 for game over, 0 to keep game.
 	checkEndGamePosition: function(circle) {
 		const position = circle.position;
+		if (position.y > 590) {
+			return -1;
+		}
 
 		const winningPolePos = this.LEVELS[this.level].winningPole;
 		const winningAroundPole = this.LEVELS[this.level].winningAroundWinningPole;
