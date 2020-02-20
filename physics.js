@@ -30,60 +30,39 @@ const Physics = {
 		},
 		{
 			ground: [
-				{x: 0, y: 500, w: 300, h: 20, shape: 'rect', friction:0.1},
-				{x: 500, y: 500, w: 700, h: 20, shape: 'rect', friction: 1, background: '#ff2211'},
+				{x: 200, y: 500, w: 670, h: 20, shape: 'rect'},
+				{x: 500, y: 475, vertices: [{x: 0, y: 50}, {x: 100, y: 0}, {x: 100, y: 50}]},
+				{x: 810, y: 500, w: 420, h: 20, shape: 'rect'},
 			],
 			staticObjects: [
-				
-
 			],
-			thresholdPole:{x:150, y: 470, w: 20, h:50, shape:'rect', background:'#ff00ee'},
-            winningPole:{x:600,y:500,w:30, h: 150, shape:'rect', background:'#cc3133'},
+			thresholdPole:{x: 1000, y: 470, w: 20, h:50, shape:'rect', background:'#ff00ee'},
+			winningPole:{x:700, y:500, w:30, h: 150, shape:'rect', background:'#cc3133'},
 			start: {x: 50, y: 170},
 			win: {x: 125, y: 480, w: 10, h: 10},
-			winningAroundWinningPole:true,
+			winningAroundWinningPole:false,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
 					"reach out the pole with a flag to win the challenge, remember the <strong>red</strong> surface is stickier than you think."
 		},
 		{
 			ground: [
-				{x: 0, y: 350, w: 300, h: 20, shape: 'rect', friction:0.1},
-				{x: 255, y: 460, vertices: [{x: 330, y:200}, {x: 330, y: 380}, {x: 650, y: 380}], friction:1},
-				{x: 430, y: 400, w: 460, h: 20, shape: 'rect', friction:0.1, background:'#ff2211'}
+				{x: 310, y: 200, w: 600, h: 20, shape: 'rect'},
+				{x: 650, y: 280, vertices: [{x: 650, y: 280}, {x: 330, y: 330}, {x: 650, y: 330}]},
+				{x: 350, y: 350, vertices: [{x: 350, y: 350}, {x: 0, y: 300}, {x: 0, y: 350}]},
+				{x: 120, y: 340, w: 140, h: 20, shape: 'rect'},
+				{x: 55, y: 500, vertices: [{x: 55, y: 500}, {x: 55, y: 550}, {x: 200, y: 550}]},
+				{x: 160, y: 450, w: 20, h: 100, shape: 'rect', background: '#FF0000'},
 			],
 			staticObjects: [
-
 			],
 			thresholdPole:{x:250, y: 400, w: 20, h:50, shape:'rect', background:'#ff00ee'},
-            winningPole:{x:600,y:400,w:30, h: 150, shape:'rect', background:'#cc3133'},
+            winningPole:{x:120,y:450,w:20, h: 100, shape:'rect', background:'#cc3133'},
 			start: {x: 50, y: 170},
 			win: {x: 125, y: 480, w: 10, h: 10},
 			winningAroundWinningPole:true,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
 					"reach out the pole with a flag to win the challenge, remember the surface is stickier than you think."
-		},
-		{
-			ground: [
-				{x: 0, y: 350, w: 300, h: 20, shape: 'rect', friction:0.1},
-				{x: 255, y: 460, vertices: [{x: 330, y:200}, {x: 330, y: 380}, {x: 650, y: 380}], friction:1},
-				{x: 300, y: 400, w: 200, h: 20, shape: 'rect', friction:0.2, background:'#33cc33'},
-				{x: 500, y: 400, w: 200, h: 20, shape: 'rect', friction:1, background:'#0000ff'},
-				{x: 700, y: 400, w: 200, h: 20, shape: 'rect', friction:1, background:'#ff2211'},
-				{x: 800, y: 400, w: 20, h: 200, shape: 'rect', friction:0.1, background:'#ffffff'},
-				
-			],
-			staticObjects: [
-
-			],
-			thresholdPole:{x:320, y: 400, w: 20, h:50, shape:'rect', background:'#ff00ee'},
-            winningPole:{x:700,y:400,w:30, h: 150, shape:'rect', background:'#cc3133'},
-			start: {x: 50, y: 170},
-			win: {x: 125, y: 480, w: 10, h: 10},
-			winningAroundWinningPole:true,
-			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
-					"reach out the pole with a flag to win the challenge, remember the surface is stickier than you think."
-		},
-		
+		}
 	],
 
 	createGround: function(g) {
