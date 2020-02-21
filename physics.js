@@ -66,9 +66,11 @@ const Physics = {
 			start: {x: 50, y: 170},
 			win: {x: 125, y: 480, w: 10, h: 10},
 			winningAroundWinningPole:false,
+
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform" +
 					"to platform to reach out the pole with a flag to win the challenge."+
 					"<br/><br/> ps : gravity is just like fire, you need to befriend it &#128513;"
+
 		},
 		{
 			ground: [
@@ -89,7 +91,9 @@ const Physics = {
 			winningAroundWinningPole:false,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
 					"to platform to reach out the pole with a flag to win the challenge.<br><br>" +
+
 					"<br/><br/> ps : psssttt... make sure you adapt yourself when you walk &#129488;"
+
 		},
 		{
 			ground: [
@@ -99,7 +103,7 @@ const Physics = {
 				{x: 350, y: 350, vertices: [{x: 350, y: 350}, {x: 0, y: 300}, {x: 0, y: 350}]},
 				{x: 130, y: 340, w: 120, h: 20, shape: 'rect', friction: 0, background: 'blue'},
 				{x: 50, y: 500, vertices: [{x: 55, y: 500}, {x: 55, y: 550}, {x: 200, y: 550}]},
-				
+
 			],
 			staticObjects: [
 				{x: 400, y: 300, w: 850, h: 620, shape: 'rect', backgroundImage:'img/level_3.png'},
@@ -111,7 +115,9 @@ const Physics = {
 			winningAroundWinningPole:true,
 			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
 					"to platform to reach out the pole with a flag to win the challenge.<br><br>" +
+
                 "<br/><br/> ps : so you think you already master it? let's see how you handle this then &#128527;"
+
 		}
 	],
 
@@ -200,6 +206,7 @@ const Physics = {
 			if (!Physics.isGrass()) {
 				Physics.changeSpeed(inc);
 				return;
+
 			}
 
 			if (inc * Physics.circle.angularVelocity > 0) { // inverse effect on acceleration
@@ -207,6 +214,7 @@ const Physics = {
 			} else { // reduce braking
 				inc *= 0.5;
 			}
+
 			Physics.changeSpeed(inc);
 		}
 	},
