@@ -331,7 +331,7 @@ const Physics = {
 		const IsInputPaused = this.checkThresholdPole(this.circle.position);
 		this.IsInputPaused = IsInputPaused;
 
-		this.snail.position = this.circle.position;
+		// this.snail.position = this.circle.position;
 
 		const speed = Math.round(this.circle.angularVelocity * 100);
 		const speedText = speed < 0 ? "< " + (-speed) : speed + (speed > 0 ? " >" : "");
@@ -360,21 +360,21 @@ const Physics = {
 
 	run: function () {
 		const start = this.LEVELS[this.level].start;
-		const circleProps = {render:{visible:false}};
+		const circleProps = {render:{visible:true, sprite:{ texture:'img/drone.png'}}};
 		const circle = Bodies.circle(start.x, start.y, 20,circleProps);
 		circle.friction = 0.1;
 		circle.frictionAir = 0;
 		circle.frictionStatic = 0;
 
-		const snailProps = {isSensor:true, isStatic:true, render:{sprite:{ texture:'img/snail.001.png'}}};
-		const snail = Bodies.circle(start.x, start.y, 20,snailProps);
+		// const snailProps = {isSensor:true, isStatic:true, render:{sprite:{ texture:'img/snail.001.png'}}};
+		// const snail = Bodies.circle(start.x, start.y, 20,snailProps);
 		
 
 		Matter.World.add(this.engine.world, [circle]);
-		Matter.World.add(this.engine.world, [snail]);
+		// Matter.World.add(this.engine.world, [snail]);
 		
 		this.circle = circle;
-		this.snail = snail;
+		// this.snail = snail;
 
 		window.addEventListener('keydown', this.checkKeys);
 		this.checkState();
