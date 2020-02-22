@@ -203,18 +203,6 @@ const Physics = {
 					return;
 			}
 
-			if (!Physics.isGrass()) {
-				Physics.changeSpeed(inc);
-				return;
-
-			}
-
-			if (inc * Physics.circle.angularVelocity > 0) { // inverse effect on acceleration
-				inc *= -1;
-			} else { // reduce braking
-				inc *= 0.5;
-			}
-
 			Physics.changeSpeed(inc);
 		}
 	},
@@ -236,6 +224,14 @@ const Physics = {
 	},
 
 	changeSpeed: function(inc) {
+		if (Physics.isGrass()) {
+			if (inc * Physics.circle.angularVelocity > 0) { // inverse effect on acceleration
+				inc *= -1;
+			} else { // reduce braking
+				inc *= 0.5;
+			}
+		}
+
 		const speed = this.circle.angularVelocity + inc * 0.01;
 		Body.setAngularVelocity(this.circle, speed);
 	},
@@ -337,7 +333,7 @@ const Physics = {
 		const speedText = speed < 0 ? "< " + (-speed) : speed + (speed > 0 ? " >" : "");
 		this.setStatus(speedText);
 	
-		setTimeout("Physics.checkState()", 100);
+		setTimeout("Physics.checkState()", 50);
 	},
 
 	endGame: function (win) {
@@ -376,7 +372,7 @@ const Physics = {
 		this.circle = circle;
 		// this.snail = snail;
 
-		window.addEventListener('keydown', this.checkKeys);
+		window.addEventListener('keydown', Physics.checkKeys);
 		this.checkState();
 	},
 
