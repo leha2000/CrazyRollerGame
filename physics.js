@@ -49,6 +49,8 @@ const Physics = {
 	level: 0,
 	winningArea:50,
 
+	acceleration: 0,
+
 	LEVELS: [
 		{
 			ground: [
@@ -67,7 +69,7 @@ const Physics = {
 			win: {x: 125, y: 480, w: 10, h: 10},
 			winningAroundWinningPole:false,
 
-			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform" +
+			instructions: "Use Arrow Keys to spin the roller clockwise and counterclockwise to roll it from platform " +
 					"to platform to reach out the pole with a flag to win the challenge."+
 					"<br/><br/> ps : gravity is just like fire, you need to befriend it &#128513;"
 
@@ -193,17 +195,15 @@ const Physics = {
 			switch (evt.keyCode) {
 				case 37:
 					inc = -1;
+					Physics.acceleration = -1;
 					CarSounds.start(-rotation);
 					break;
 				case 39:
 					inc = 1;
+					Physics.acceleration = 1;
 					CarSounds.start(rotation);
 					break;
-				default:
-					return;
 			}
-
-			Physics.changeSpeed(inc);
 		}
 	},
 
@@ -318,6 +318,10 @@ const Physics = {
 	},
 
 	checkState: function () {
+		if (this.acceleration != 0) {
+			this.changeSpeed(this.acceleration);
+		}
+
 		const income = this.checkEndGamePosition(this.circle);
 		if (income != 0) {
 			this.endGame(income == 1);
@@ -373,11 +377,13 @@ const Physics = {
 		// this.snail = snail;
 
 		window.addEventListener('keydown', Physics.checkKeys);
+		window.addEventListener('keyup', function () {Physics.acceleration = 0;});
 		this.checkState();
 	},
 
 	rerun: function (changeLevel) {
 		Physics.IsInputPaused = false;
+		Physics.acceleration = 0;
 		Matter.World.clear(this.engine.world, !changeLevel);
 		if (changeLevel) {
 			this.buildLevel();
